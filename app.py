@@ -4,6 +4,9 @@ from ai_calc.controller import CalcController
 from blood.controller import BloodController
 from gradient_descent.controller import GradientDescentController
 from iris.controller import IrisController
+from cabbage.controller import CabbageController
+from kospi.controller import KospiController
+from stock_ticker.controller import StockTickerController
 from blood.model import BloodModel
 
 import re
@@ -120,6 +123,30 @@ def iris():
     ctrl = IrisController()
     result = ctrl.service_model()
     return render_template('iris.html', result=result)
+
+@app.route('/cabbage', methods=['GET','POST'])
+def cabbage():
+    ctrl = CabbageController()
+    result = ctrl.service_model()
+    render_params = {}
+    render_params['result'] = result
+    return render_template('cabbage.html', **render_params)
+
+@app.route('/kospi', methods=['GET','POST'])
+def kospi():
+    ctrl = KospiController()
+    kospi = ctrl.service()
+    render_params = {}
+    render_params['result'] = kospi
+    return render_template('kospi.html', **render_params)
+
+@app.route('/stock_ticker', methods=['GET','POST'])
+def stock_ticker():
+    ctrl = StockTickerController()
+    price = ctrl.service()
+    render_params = {}
+    render_params['result'] = price
+    return render_template('stock_ticker.html', **render_params)
 
 
 
