@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, jsonify
 from member.controller import MemberController
 from ai_calc.controller import CalcController
 from blood.controller import BloodController
+from gradient_descent.controller import GradientDescentController
+from iris.controller import IrisController
+from blood.model import BloodModel
 
 import re
 
@@ -94,11 +97,30 @@ def blood():
     weight = request.form['weight']
     age = request.form['age']
     print('몸무게 : {}, 나이 : {}'.format(weight, age))
+    model = BloodModel('blood/data/data.txt')
+    raw_data = model.create_raw_data()
+    render_params = {}
+    value = model.create_model(raw_data, weight, age)
+    render_params['result'] = value
+    return render_template('blood.html', **render_params)
 
-    c = BloodController(weight, age)
-    result = c.blood()
+    # c = BloodController(weight, age)
+    # result = c.blood()
+    #
+    # return ''
 
-    return ''
+@app.route('/gradient_descent', methods=['GET','POST'])
+def gradient_descent():
+    ctrl = GradientDescentController()
+    name = ctrl.service_model()
+    return render_template('gradient_descent.html', name=name)
+
+@app.route('/iris', methods=['GET','POST'])
+def iris():
+    ctrl = IrisController()
+    result = ctrl.service_model()
+    return render_template('iris.html', result=result)
+
 
 
 if __name__ == '__main__':
